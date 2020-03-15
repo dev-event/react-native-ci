@@ -52,7 +52,8 @@ buck-out
 .gradle
 local.properties
 *.iml
-
+android/app/build
+android/app/.externalNativeBuild
 
 # Node
 node_modules
