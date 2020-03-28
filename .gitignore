@@ -52,8 +52,9 @@ buck-out
 .gradle
 local.properties
 *.iml
-
-
+*.externalNativeBuild
+build/
+debug/
 # Node
 node_modules
 *.log
