@@ -18,6 +18,8 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* CiModuleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CiModuleTests.m */; };
 		37716C8221D682EDF06D4227 /* libPods-CiModule-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 013B833216385476A5A4AC4B /* libPods-CiModule-tvOS.a */; };
+		480A88B2242FEDE10018A673 /* CustomCxxModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 480A88B0242FEDE10018A673 /* CustomCxxModule.cpp */; };
+		480A88B5242FEEAB0018A673 /* RCTCustomCxxModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 480A88B4242FEEAB0018A673 /* RCTCustomCxxModule.mm */; };
 		773895BBC8F897A17625121A /* libPods-CiModule-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65F33E273ADE99041AACB95E /* libPods-CiModule-tvOSTests.a */; };
 		9515DB565D5A63EB56AE19E9 /* libPods-CiModuleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EA895D834E6FAE88BB27C6C /* libPods-CiModuleTests.a */; };
 /* End PBXBuildFile section */
@@ -57,6 +59,10 @@
 		2D02E47B1E0B4A5D006451C7 /* CiModule-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiModule-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* CiModule-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiModule-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		454A03F0AA8A7280294660A8 /* Pods-CiModuleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CiModuleTests.release.xcconfig"; path = "Target Support Files/Pods-CiModuleTests/Pods-CiModuleTests.release.xcconfig"; sourceTree = "<group>"; };
+		480A88B0242FEDE10018A673 /* CustomCxxModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomCxxModule.cpp; path = ../src/cxx/CustomCxxModule.cpp; sourceTree = "<group>"; };
+		480A88B1242FEDE10018A673 /* CustomCxxModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomCxxModule.h; path = ../src/cxx/CustomCxxModule.h; sourceTree = "<group>"; };
+		480A88B4242FEEAB0018A673 /* RCTCustomCxxModule.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RCTCustomCxxModule.mm; sourceTree = "<group>"; };
+		480A88B6242FEEC90018A673 /* RCTCustomCxxModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTCustomCxxModule.h; sourceTree = "<group>"; };
 		65F33E273ADE99041AACB95E /* libPods-CiModule-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CiModule-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BE9A64294B4D73640361C6B /* Pods-CiModuleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CiModuleTests.debug.xcconfig"; path = "Target Support Files/Pods-CiModuleTests/Pods-CiModuleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7EA895D834E6FAE88BB27C6C /* libPods-CiModuleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CiModuleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +131,9 @@
 		13B07FAE1A68108700A75B9A /* CiModule */ = {
 			isa = PBXGroup;
 			children = (
+				480A88B3242FEE7E0018A673 /* bridge */,
+				480A88B0242FEDE10018A673 /* CustomCxxModule.cpp */,
+				480A88B1242FEDE10018A673 /* CustomCxxModule.h */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -147,6 +156,15 @@
 				7EA895D834E6FAE88BB27C6C /* libPods-CiModuleTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		480A88B3242FEE7E0018A673 /* bridge */ = {
+			isa = PBXGroup;
+			children = (
+				480A88B4242FEEAB0018A673 /* RCTCustomCxxModule.mm */,
+				480A88B6242FEEC90018A673 /* RCTCustomCxxModule.h */,
+			);
+			path = bridge;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -194,7 +212,6 @@
 				6BE9A64294B4D73640361C6B /* Pods-CiModuleTests.debug.xcconfig */,
 				454A03F0AA8A7280294660A8 /* Pods-CiModuleTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -308,6 +325,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -528,8 +546,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				480A88B5242FEEAB0018A673 /* RCTCustomCxxModule.mm in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				480A88B2242FEDE10018A673 /* CustomCxxModule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,10 +646,43 @@
 			baseConfigurationReference = 9E8CC8DEA3BC4456393D8E26 /* Pods-CiModule.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/FBReactNativeSpec\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTTypeSafety\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCommon\"",
+					"\"${PODS_ROOT}/Headers/Public/Yoga\"",
+					"\"${PODS_ROOT}/Headers/Public/glog\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"${PODS_ROOT}/boost-for-react-native\"",
+					"\"${PODS_ROOT}/Folly\"",
+				);
 				INFOPLIST_FILE = CiModule/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_HAVE_PTHREAD=1",
+					"-Wno-comma",
+					"-Wno-shorten-64-to-32",
+					"-Wno-documentation",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -646,9 +699,42 @@
 			baseConfigurationReference = 0A59759C054BA75E80BD511E /* Pods-CiModule.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CURRENT_PROJECT_VERSION = 1;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/FBReactNativeSpec\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTTypeSafety\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCommon\"",
+					"\"${PODS_ROOT}/Headers/Public/Yoga\"",
+					"\"${PODS_ROOT}/Headers/Public/glog\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"${PODS_ROOT}/boost-for-react-native\"",
+					"\"${PODS_ROOT}/Folly\"",
+				);
 				INFOPLIST_FILE = CiModule/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_HAVE_PTHREAD=1",
+					"-Wno-comma",
+					"-Wno-shorten-64-to-32",
+					"-Wno-documentation",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
