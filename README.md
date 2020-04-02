@@ -1,5 +1,5 @@
 # React native C++ Native Modules (Android version)
-
+Connect Native Modules C++ in React Native > 0.60.
 [![N|Solid](https://hackernoon.com/hn-images/1*q16vcoe7CRolZLOCoG5_Pg.png)](https://nodesource.com/products/nsolid)
 
 [![Android 10](https://github.com/dev-event/react-native-ci/blob/master/screenshot/src1.jpg)
@@ -31,7 +31,7 @@ React Native version  > 0.60
 ```sh
 $ yarn install
 ```
-### Documentation 
+### Documentation
 
 Use data from a table to convert values.
 
@@ -53,6 +53,3 @@ License
 ----
 
 MIT
-
-
-
