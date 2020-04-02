@@ -4,7 +4,6 @@
 #include "cxxreact/Instance.h"
 
 #include <folly/Memory.h>
-//#include <glog/logging.h>
 
 
 #include <thread>
@@ -24,26 +23,18 @@ double Sample::twice(double n) {
   return n * 2;
 }
 
-// std::string Sample::concat(const std::string &a, const std::string &b) {
-//   return a + b;
-// }
+double Sample::add(double a, double b) {
+  return a + b;
+}
 
-// std::string Sample::repeat(int count, const std::string &str) {
-//   std::string ret;
-//   for (int i = 0; i < count; i++) {
-//     ret += str;
-//   }
-//
-//   return ret;
-// }
 
-// void Sample::save(std::map<std::string, std::string> dict) {
-//   state_ = std::move(dict);
-// }
-//
-// std::map<std::string, std::string> Sample::load() {
-//   return state_;
-// }
+void Sample::save(std::map<std::string, std::string> dict) {
+  state_ = std::move(dict);
+}
+
+std::map<std::string, std::string> Sample::load() {
+  return state_;
+}
 
 void Sample::call_later(int msec, std::function<void()> f) {
   std::thread t([=] {
@@ -61,66 +52,56 @@ auto CustomCxxModule::getConstants() -> std::map<std::string, folly::dynamic> {
 
 auto CustomCxxModule::getMethods() -> std::vector<Method> {
   return {
-        Method("getEvent",
-             [this]() {
-               if (auto reactInstance = getInstance().lock()) {
-                 reactInstance->callJSFunction(
-                     "RCTDeviceEventEmitter", "emit",
-                     folly::dynamic::array(
-                         "appStateDidChange",
-                         folly::dynamic::object("app_state", "active")));
-               }
-             }),
-        Method("getString", []     (folly::dynamic args, Callback cb){cb({"Callback string"});}),
-        Method("twice",     [this] (folly::dynamic args) -> folly::dynamic {
-                            return sample_->twice(facebook::xplat::jsArgAsDouble(args, 0));
-                            },SyncTag),
+        Method("getEvent", [this]() { if (auto reactInstance = getInstance().lock()) {
+         reactInstance->callJSFunction( "RCTDeviceEventEmitter", "emit",
+                 folly::dynamic::array("appStateDidChange",folly::dynamic::object("app_state", "active")));
+           }
+         }),
+
+        Method("getString", [] (folly::dynamic args, Callback callbacks) {
+          callbacks({"Callback string"});
+        }),
+
+        Method("add", [this](folly::dynamic args, Callback callbacks) {
+           callbacks({sample_->add(facebook::xplat::jsArgAsDouble(args, 0), facebook::xplat::jsArgAsDouble(args, 1))});
+         }),
         Method("hello", [this] { sample_->hello(); }),
-        Method(
-        "syncHello",
-        [this]() -> folly::dynamic {
+
+        Method("twice", [this] (folly::dynamic args) -> folly::dynamic {
+          return sample_->twice(facebook::xplat::jsArgAsDouble(args, 0));
+        } ,SyncTag),
+
+        Method("syncHello", [this]() -> folly::dynamic {
           sample_->hello();
           return nullptr;
         },
         SyncTag),
-        Method("call_later", [this](folly::dynamic args, Callback cb) {
-           sample_->call_later((int)facebook::xplat::jsArgAsDouble(args, 0), [cb] { cb({"Callback later"}); });
+
+        Method("call_later", [this](folly::dynamic args, Callback callbacks) {
+           sample_->call_later((int)facebook::xplat::jsArgAsDouble(args, 0), [callbacks] { callbacks({"Callback later"}); });
          }),
-         Method(
-        "addIfPositiveAsPromise",
-        [](folly::dynamic args, Callback cb, Callback cbError) {
+
+        Method("addIfPositiveAsPromise", [] (folly::dynamic args, Callback callbacks, Callback callbacksError) {
           auto a = facebook::xplat::jsArgAsDouble(args, 0);
           auto b = facebook::xplat::jsArgAsDouble(args, 1);
           if (a < 0 || b < 0) {
-            cbError({"Negative number!"});
+            callbacksError({"Negative number!"});
           } else {
-            cb({a + b});
+            callbacks({a + b});
           }
         }),
-    Method(
-        "addIfPositiveAsAsync",
-        [](folly::dynamic args, Callback cb, Callback cbError) {
-          auto a = facebook::xplat::jsArgAsDouble(args, 0);
-          auto b = facebook::xplat::jsArgAsDouble(args, 1);
-          if (a < 0 || b < 0) {
-            cbError({"Negative number!"});
-          } else {
-            cb({a + b});
-          }
-        },
-        AsyncTag),
-         // Method(
-         //  "concat",
-         //  [this](folly::dynamic args, Callback cb) {
-         //    cb({sample_->concat(
-         //        facebook::xplat::jsArgAsString(args, 0), facebook::xplat::jsArgAsString(args, 1))});
-         //  }),
-         // Method(
-         //  "repeat",
-         //  [this](folly::dynamic args, Callback cb) {
-         //    cb({sample_->repeat(
-         //        (int)facebook::xplat::jsArgAsInt(args, 0), facebook::xplat::jsArgAsString(args, 1))});
-         //  }),
+
+        Method("addIfPositiveAsAsync", [] (folly::dynamic args, Callback callbacks, Callback callbacksError) {
+              auto a = facebook::xplat::jsArgAsDouble(args, 0);
+              auto b = facebook::xplat::jsArgAsDouble(args, 1);
+              if (a < 0 || b < 0) {
+                callbacksError({"Negative number!"});
+              } else {
+                callbacks({a + b});
+              }
+            },
+            AsyncTag),
+
          // Method("save", this, &CustomCxxModule::save),
          // Method("load", this, &CustomCxxModule::load),
       };
@@ -136,12 +117,12 @@ auto CustomCxxModule::getMethods() -> std::vector<Method> {
 //   sample_->save(std::move(m));
 // }
 //
-// void CustomCxxModule::load(__unused folly::dynamic args, Callback cb) {
+// void CustomCxxModule::load(__unused folly::dynamic args, Callback callbacks) {
 //   folly::dynamic d = folly::dynamic::object;
 //   for (const auto &p : sample_->load()) {
 //     d.insert(p.first, p.second);
 //   }
-//   cb({d});
+//   callbacks({d});
 // }
 
 extern "C" CustomCxxModule* createSampleCxxModule() {

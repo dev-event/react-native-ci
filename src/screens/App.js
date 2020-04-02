@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {
   SafeAreaView,
   View,
@@ -18,24 +18,23 @@ const spyFunction = msg => {
 
 MessageQueue.spy(spyFunction);
 
-class App extends Component {
+const Bridge = NativeModules.CustomCxxModule;
+
+class App extends PureComponent {
   constructor() {
     super();
     this.handleRequestModule = this.handleRequestModule.bind(this);
-
     this.state = {
-      //constant
       id: null,
       text: null,
-      //error log
       error: null,
-      //function params
-      sampleString: null,
+      sampleAdd: null,
       sampleTwice: null,
-      sampleCallbackString: null,
-      sampleCallbackLater: null,
+      sampleString: null,
       sampleAsAsync: null,
       sampleAsPromise: null,
+      sampleCallbackLater: null,
+      sampleCallbackString: null,
     };
   }
 
@@ -44,56 +43,62 @@ class App extends Component {
     try {
       await this.getConstantModule();
       await this.getFunctionModule();
-    } catch (err) {
-      this.setState({error: err || 'Error callback in C++ Native Module'});
+    } catch (errors) {
+      this.setState({error: errors || 'Error callback in C++ Native Module'});
     }
   };
 
   getConstantModule = () => {
     //* TODO get constant Native Modules
-
-    let getId = NativeModules.CustomCxxModule.constId;
-    let getText = NativeModules.CustomCxxModule.constText;
-    this.setState({id: getId, text: getText});
+    this.setState({
+      id: Bridge.constId || 'not found',
+      text: Bridge.constText || 'not found',
+    });
   };
 
   getFunctionModule = () => {
     //* TODO get Methods Native Modules
-    let getHello = NativeModules.CustomCxxModule.hello();
-    this.setState({sampleString: getHello})
-
-    NativeModules.CustomCxxModule.getString(result => {
-      this.setState({sampleCallbackString: result});
+    this.setState({
+      sampleTwice: Bridge.twice(2) || 'not found',
+      sampleString: Bridge.hello() || 'not found',
     });
 
-    NativeModules.CustomCxxModule.call_later(2000, result => {
-      this.setState({sampleCallbackLater: result});
+    Bridge.getString(result => {
+      this.setState({sampleCallbackString: result || 'not found'});
     });
 
-    let getTwice = NativeModules.CustomCxxModule.twice(2);
-    this.setState({sampleTwice: getTwice})
+    Bridge.call_later(2000, (result, error) => {
+      this.setState({sampleCallbackLater: result || 'not found'});
+    });
 
-    // NativeModules.CustomCxxModule.addIfPositiveAsPromise(0, (error, result) => {
-    //   this.setState({sampleAsPromise: result});
+    Bridge.add(10, 13, (result, error) => {
+      this.setState({sampleAdd: result || 'not found'});
+    });
+
+    Bridge.getEvent();
+
+    //* TODO Need fixing params
+
+    // Bridge.addIfPositiveAsPromise(0, (result, error) => {
+    //   this.setState({sampleAsPromise: result || 'not found'});
     // });
     //
-    // NativeModules.CustomCxxModule.addIfPositiveAsAsync(0, (error, result) => {
-    //   this.setState({sampleAsAsync: result});
+    // Bridge.addIfPositiveAsAsync(0, (result, error) => {
+    //   this.setState({sampleAsAsync: result || 'not found'});
     // });
-
-    NativeModules.CustomCxxModule.getEvent();
   };
 
   render() {
     const {id, text} = this.state;
     const {
       error,
-      sampleCallbackString,
-      sampleCallbackLater,
+      sampleAdd,
       sampleTwice,
       sampleString,
-      sampleAsPromise,
       sampleAsAsync,
+      sampleAsPromise,
+      sampleCallbackLater,
+      sampleCallbackString,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -106,12 +111,13 @@ class App extends Component {
           <View>
             <Card title="const id" description={id} />
             <Card title="const text" description={text} />
+            <Card title="twice" description={sampleTwice} />
+            <Card title="add" description={sampleAdd} />
             <Card title="hello" description={sampleString} />
             <Card title="callback" description={sampleCallbackString} />
             <Card title="callback later" description={sampleCallbackLater} />
-            <Card title="twice" description={sampleTwice} />
-            <Card title="addIfPositiveAsPromise" description={sampleAsPromise} />
             <Card title="addIfPositiveAsAsync" description={sampleAsAsync} />
+            <Card title="addIfPositiveAsPromise" description={sampleAsPromise} />
           </View>
         )
          : (
