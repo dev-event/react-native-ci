@@ -2,6 +2,8 @@
 
 [![N|Solid](https://hackernoon.com/hn-images/1*q16vcoe7CRolZLOCoG5_Pg.png)](https://nodesource.com/products/nsolid)
 
+[![Android 10](https://github.com/dev-event/react-native-ci/blob/master/screenshot/src1.jpg)
+
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://github.com/dev-event/react-native-ci)
 
 There is a more straitforward way to connect C++ in React Native.
